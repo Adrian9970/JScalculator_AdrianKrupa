@@ -2,7 +2,9 @@ class Calculator {
     constructor() {
         this.schermCurrent = document.querySelector(".schermcurrent");
         this.schermVorige = document.querySelector(".schermvorige");
+        this.historyContainer = document.querySelector('.history-container');
         this.bindEvents();
+        this.history = [];
     }
 
     bindEvents() {
@@ -11,7 +13,13 @@ class Calculator {
         const equalsButton = document.querySelector("[data-equals]");
         const allClearButton = document.querySelector("[data-all-clear]");
         const deleteButton = document.querySelector("[data-Delete]");
-
+        const historyButton = document.querySelector("[history-btn]");
+        
+        
+        historyButton.addEventListener("click", () => {
+this.toggleHistory();
+        });
+        
         numberButtons.forEach(button => {
             button.addEventListener("click", () => {
                 this.appendNumber(button.innerText);
@@ -35,11 +43,26 @@ class Calculator {
         deleteButton.addEventListener("click", () => {
             this.delete();
         });
+      
     }
+    toggleHistory() {
+        if (this.historyContainer) {
+            this.historyContainer.classList.toggle('active'); }
+       const historyList = document.createElement('ul');
+       this.history.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item.expression} = ${item.result}`;
+        historyList.appendChild(listItem);
+       });
+       this.historyContainer.innerHTML = '';
+       this.historyContainer.appendChild(historyList);
+        }
 
     appendNumber(number) {
         this.schermCurrent.innerText += number;
     }
+
+    
 
     appendOperation(operation) {
         this.schermCurrent.innerText += operation;
@@ -51,6 +74,9 @@ class Calculator {
             const result = eval(expr);
             this.schermVorige.innerText = expr;
             this.schermCurrent.innerText = result;
+            this.history.push({expression: expr, result: result});
+
+        
         }
     }
 

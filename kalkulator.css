@@ -67,3 +67,20 @@ button:active {
     transform: translateY(1px);
 }
 
+.history-container {
+    display: none;
+    position: absolute;
+    top: 5%;
+    right: 15%;
+    width: 25vw;
+    height: 35vh;
+    background-color: black;
+    z-index: 1;
+}
+.history-container.active {
+    display: block;
+    background-color: gray;
+}
+
+ul {
+list-style-type: none;}
