@@ -71,15 +71,29 @@ this.toggleHistory();
     calculate() {
         const expr = this.schermCurrent.innerText;
         if (expr) {
-            const result = eval(expr);
+            const sanitizedExpr = this.sanitizeExpression(expr);
+            const result = this.evaluateExpression(sanitizedExpr);
+    
             this.schermVorige.innerText = expr;
             this.schermCurrent.innerText = result;
-            this.history.push({expression: expr, result: result});
-
-        
+            this.history.push({ expression: expr, result: result });
         }
     }
-
+    
+    sanitizeExpression(expr) {
+        return expr.replace(/[^-()\d/*+.]/g, ''); 
+    }
+    
+    evaluateExpression(expr) {
+        try {
+            const sanitizedExpr = this.sanitizeExpression(expr);
+            const evaluate = new Function('return ' + sanitizedExpr);
+            return evaluate();
+        } catch (error) {
+            return 'Error';
+        }
+    }
+    
     clearAll() {
         this.schermCurrent.innerText = '';
         this.schermVorige.innerText = '';
